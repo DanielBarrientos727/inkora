@@ -1,0 +1,2356 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#121212">
+  <meta name="description" content="INKORA: descubre tatuadores, explora estilos y convierte una idea en una historia sobre tu piel.">
+  <title>INKORA — Tu piel. Tu historia.</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #121212;
+      --surface: #1e1e1e;
+      --surface-2: #252525;
+      --surface-3: #303030;
+      --accent: #ff5a5f;
+      --accent-soft: #3a1c1d;
+      --text: #f7f7f7;
+      --muted: #a0a0a0;
+      --border: #333333;
+      --success: #77d99a;
+      --warning: #f4c66a;
+      --radius: 18px;
+      --shadow: 0 16px 42px #0003;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      scroll-behavior: smooth;
+      background: var(--bg);
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding-bottom: calc(78px + env(safe-area-inset-bottom, 0px));
+      color: var(--text);
+      background: var(--bg);
+      font: 15px/1.5 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      color: inherit;
+      font: inherit;
+    }
+
+    button,
+    a,
+    input,
+    select,
+    textarea {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: .45;
+    }
+
+    img {
+      max-width: 100%;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    .app-shell {
+      width: min(100%, 900px);
+      margin: 0 auto;
+      padding: 22px 18px 38px;
+    }
+
+    .topbar,
+    .row,
+    .row-between,
+    .section-heading,
+    .artist-heading,
+    .button-row,
+    .profile-line,
+    .stat-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .row-between,
+    .section-heading,
+    .profile-line,
+    .stat-row {
+      justify-content: space-between;
+    }
+
+    .row-start {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .grow {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .wrap {
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      display: inline-block;
+      font-size: 27px;
+      font-weight: 900;
+      letter-spacing: -.065em;
+    }
+
+    .logo-mark {
+      color: var(--accent);
+      margin-left: 2px;
+    }
+
+    .kicker {
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      margin-bottom: 14px;
+      font-size: clamp(31px, 6vw, 49px);
+      line-height: 1.04;
+      letter-spacing: -.045em;
+    }
+
+    h2 {
+      margin: 28px 0 13px;
+      font-size: 21px;
+      line-height: 1.2;
+      letter-spacing: -.025em;
+    }
+
+    h3 {
+      margin: 0 0 5px;
+      font-size: 17px;
+      line-height: 1.25;
+    }
+
+    p {
+      margin-bottom: 12px;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 12.5px;
+    }
+
+    .accent {
+      color: var(--accent);
+    }
+
+    .card {
+      min-width: 0;
+      margin-bottom: 12px;
+      padding: 15px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    .card-soft {
+      background: var(--surface-2);
+    }
+
+    .card-accent {
+      border-color: #6a3032;
+      background: linear-gradient(135deg, #321b1c, #211819);
+    }
+
+    .btn {
+      display: inline-flex;
+      min-height: 43px;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 14px;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      background: var(--surface-2);
+      color: var(--text);
+      font-weight: 750;
+      text-align: center;
+      transition: filter .15s ease, transform .15s ease, border-color .15s ease;
+    }
+
+    .btn:hover {
+      filter: brightness(1.12);
+      border-color: #555;
+    }
+
+    .btn:active {
+      transform: scale(.985);
+    }
+
+    .btn-primary {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .btn-quiet {
+      background: transparent;
+    }
+
+    .btn-small {
+      min-height: 34px;
+      padding: 7px 10px;
+      border-radius: 10px;
+      font-size: 12.5px;
+    }
+
+    .btn-block {
+      display: flex;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .button-row > * {
+      flex: 1;
+    }
+
+    .icon-button {
+      width: 38px;
+      height: 38px;
+      flex: 0 0 auto;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--surface-2);
+      font-size: 19px;
+    }
+
+    .heart-button {
+      padding: 2px 6px;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font-size: 26px;
+    }
+
+    .heart-button.is-active {
+      color: var(--accent);
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin: 0 5px 6px 0;
+      padding: 6px 10px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--surface-2);
+      color: var(--text);
+      font-size: 12.5px;
+      font-weight: 650;
+    }
+
+    .chip-active {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: #ffb5b7;
+    }
+
+    .pill-status {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 9px;
+      border: 1px solid #444;
+      border-radius: 99px;
+      background: var(--surface-2);
+      color: var(--muted);
+      font-size: 11.5px;
+      font-weight: 700;
+    }
+
+    .pill-status.good {
+      border-color: #315d40;
+      color: var(--success);
+    }
+
+    .pill-status.pending {
+      border-color: #6c5427;
+      color: var(--warning);
+    }
+
+    .field {
+      display: block;
+      width: 100%;
+      margin-top: 13px;
+      color: var(--muted);
+      font-size: 12.5px;
+      font-weight: 650;
+    }
+
+    .field input,
+    .field select,
+    .field textarea,
+    .search-input {
+      display: block;
+      width: 100%;
+      margin-top: 6px;
+      padding: 12px 13px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #181818;
+      color: var(--text);
+    }
+
+    .field textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .field input[type="checkbox"],
+    .field input[type="radio"] {
+      display: inline-block;
+      width: auto;
+      margin: 0 7px 0 0;
+      accent-color: var(--accent);
+    }
+
+    .field input[type="range"] {
+      padding: 0;
+      accent-color: var(--accent);
+    }
+
+    .check-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 11px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .check-line input {
+      accent-color: var(--accent);
+    }
+
+    .error-text {
+      min-height: 0;
+      margin-top: 7px;
+      color: #ff8b8e;
+      font-size: 12.5px;
+    }
+
+    .hero-photo,
+    .cover-photo,
+    .artist-avatar,
+    .image-thumb {
+      overflow: hidden;
+      background: linear-gradient(135deg, #353535, #171717);
+    }
+
+    .hero-photo {
+      position: relative;
+      height: clamp(235px, 55vw, 360px);
+      margin: 14px 0 24px;
+      border: 1px solid var(--border);
+      border-radius: 25px;
+      background: var(--surface-2);
+    }
+
+    .hero-photo img,
+    .cover-photo img,
+    .artist-avatar img,
+    .image-thumb img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .hero-photo::after {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, #0000 25%, #000c 100%);
+      content: "";
+      pointer-events: none;
+    }
+
+    .hero-stamp {
+      position: absolute;
+      z-index: 1;
+      top: 15px;
+      left: 17px;
+      color: var(--accent);
+      font-size: 34px;
+    }
+
+    .hero-caption {
+      position: absolute;
+      z-index: 1;
+      right: 16px;
+      bottom: 15px;
+      left: 16px;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 750;
+      letter-spacing: .12em;
+    }
+
+    .cover-photo {
+      position: relative;
+      height: 178px;
+      margin-bottom: 12px;
+      border-radius: 13px;
+      background: var(--surface-2);
+    }
+
+    .cover-photo::after {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, #0000 38%, #000b 100%);
+      content: "";
+      pointer-events: none;
+    }
+
+    .cover-label {
+      position: absolute;
+      z-index: 1;
+      bottom: 11px;
+      left: 12px;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .artist-avatar {
+      width: 66px;
+      height: 66px;
+      flex: 0 0 auto;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      color: var(--accent);
+    }
+
+    .artist-avatar img {
+      border-radius: 50%;
+    }
+
+    .artist-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .artist-card {
+      min-width: 0;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      background: var(--surface);
+    }
+
+    .artist-card .cover-photo {
+      height: 165px;
+      margin: 0 0 10px;
+    }
+
+    .artist-card .artist-name-line {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 4px;
+    }
+
+    .price {
+      font-size: 17px;
+      font-weight: 850;
+      letter-spacing: -.03em;
+    }
+
+    .section-heading {
+      margin-bottom: 12px;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+    }
+
+    .filter-panel summary {
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    .range-label {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .empty-state {
+      padding: 28px 18px;
+      border: 1px dashed #454545;
+      border-radius: var(--radius);
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .empty-symbol {
+      margin-bottom: 8px;
+      color: var(--accent);
+      font-size: 30px;
+    }
+
+    .role-choice {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      background: var(--surface);
+      text-align: left;
+    }
+
+    .role-choice.selected {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .role-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin: 13px 0;
+    }
+
+    .announcement {
+      display: block;
+      padding: 15px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    .message-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin: 16px 0;
+    }
+
+    .message-bubble {
+      max-width: 84%;
+      align-self: flex-start;
+      padding: 10px 12px;
+      border-radius: 15px 15px 15px 4px;
+      background: var(--surface-2);
+      overflow-wrap: anywhere;
+    }
+
+    .message-bubble.mine {
+      align-self: flex-end;
+      border-radius: 15px 15px 4px 15px;
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .message-time {
+      margin-top: 4px;
+      font-size: 10px;
+      opacity: .7;
+    }
+
+    .map-placeholder {
+      position: relative;
+      min-height: 290px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background-color: #1b1e1d;
+      background-image: linear-gradient(#313735 1px, transparent 1px), linear-gradient(90deg, #313735 1px, transparent 1px);
+      background-size: 35px 35px;
+    }
+
+    .map-path {
+      position: absolute;
+      top: 45%;
+      left: -8%;
+      width: 120%;
+      height: 30px;
+      border-top: 5px solid #4e5a51;
+      border-bottom: 5px solid #4e5a51;
+      transform: rotate(-22deg);
+    }
+
+    .map-pin {
+      position: absolute;
+      z-index: 2;
+      padding: 6px 9px;
+      border: 0;
+      border-radius: 12px 12px 12px 3px;
+      background: #f7f7f7;
+      color: #171717;
+      font-size: 12px;
+      font-weight: 850;
+      transform: translate(-50%, -50%);
+    }
+
+    .map-pin.active {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .table-scroll {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      min-width: 420px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 11px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      vertical-align: top;
+      font-size: 13px;
+    }
+
+    th {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .step-list {
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .step-list li {
+      margin: 7px 0;
+    }
+
+    .toast-stack {
+      position: fixed;
+      z-index: 30;
+      top: 12px;
+      left: 50%;
+      display: grid;
+      width: min(92vw, 410px);
+      gap: 8px;
+      transform: translateX(-50%);
+    }
+
+    .toast {
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--success);
+      border-radius: 12px;
+      background: var(--surface-2);
+      box-shadow: var(--shadow);
+    }
+
+    .toast.error {
+      border-left-color: var(--accent);
+    }
+
+    .bottom-nav[hidden] {
+      display: none;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      z-index: 20;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      display: flex;
+      justify-content: center;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      border-top: 1px solid var(--border);
+      background: #0d0d0df2;
+      backdrop-filter: blur(16px);
+    }
+
+    .bottom-nav a {
+      display: block;
+      width: min(20%, 110px);
+      padding: 9px 2px 8px;
+      color: var(--muted);
+      font-size: 10.5px;
+      text-align: center;
+    }
+
+    .bottom-nav a.active {
+      color: var(--accent);
+    }
+
+    .nav-icon {
+      display: block;
+      margin-bottom: 1px;
+      font-size: 19px;
+      line-height: 1.2;
+    }
+
+    .legal-note {
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .divider {
+      height: 1px;
+      margin: 15px 0;
+      border: 0;
+      background: var(--border);
+    }
+
+    @media (min-width: 740px) {
+      body {
+        padding-bottom: 24px;
+      }
+
+      .app-shell {
+        width: min(100% - 180px, 900px);
+        margin-left: max(180px, calc((100% - 900px) / 2));
+        padding-top: 30px;
+      }
+
+      .bottom-nav {
+        top: 0;
+        right: auto;
+        bottom: 0;
+        left: 0;
+        width: 155px;
+        flex-direction: column;
+        justify-content: flex-start;
+        gap: 5px;
+        padding: 28px 10px;
+        border-top: 0;
+        border-right: 1px solid var(--border);
+        background: #0d0d0d;
+      }
+
+      .bottom-nav a {
+        width: 100%;
+        padding: 12px 10px;
+        border-radius: 12px;
+        font-size: 13px;
+        text-align: left;
+      }
+
+      .nav-icon {
+        display: inline-block;
+        width: 29px;
+        margin: 0 5px 0 0;
+        vertical-align: middle;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .app-shell {
+        padding-right: 13px;
+        padding-left: 13px;
+      }
+
+      .artist-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .artist-card {
+        padding: 12px;
+      }
+
+      .artist-card .cover-photo {
+        height: 210px;
+      }
+
+      .row-mobile-stack {
+        align-items: stretch;
+        flex-direction: column;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+        animation-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="toastStack" class="toast-stack" role="status" aria-live="polite"></div>
+  <main id="app" class="app-shell"></main>
+  <nav id="mainNav" class="bottom-nav" aria-label="Navegación principal" hidden></nav>
+
+  <script>
+    "use strict";
+
+    // INKORA es un prototipo local. No procesa pagos ni envía mensajes a otros usuarios.
+    const APP_NAME = "INKORA";
+    const CITY = "Barcelona";
+    const MAX_IMAGE_BYTES = 1_000_000;
+    const STORAGE_PREFIX = "inkora_demo_";
+
+    const STYLE_LIST = [
+      "Blackwork",
+      "Fine line",
+      "Realismo",
+      "Tradicional",
+      "Neotradicional",
+      "Japonés",
+      "Ornamental",
+      "Geométrico",
+      "Botánico"
+    ];
+
+    const DAYS = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+    const TIME_SLOTS = ["09:00", "10:00", "12:00", "14:00", "16:00", "18:00"];
+
+    // Fotografías y atribuciones: los perfiles de artistas son ficticios.
+    // Las imágenes son ejemplos visuales y no representan trabajos verificados de estos perfiles.
+    const IMAGE_CREDITS = [
+      {
+        id: "dragon",
+        title: "Dragon blackwork tattoo.jpg",
+        creator: "Technopop.tattoo",
+        license: "CC BY-SA 4.0",
+        licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0/",
+        sourceUrl: "https://commons.wikimedia.org/wiki/File:Dragon_blackwork_tattoo.jpg",
+        fileName: "Dragon_blackwork_tattoo.jpg"
+      },
+      {
+        id: "butterfly",
+        title: "Dom Carter Butterfly Blackwork Tattoo.jpg",
+        creator: "DomCarterTattoo",
+        license: "CC BY-SA 4.0",
+        licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0/",
+        sourceUrl: "https://commons.wikimedia.org/wiki/File:Dom_Carter_Butterfly_Blackwork_Tattoo.jpg",
+        fileName: "Dom_Carter_Butterfly_Blackwork_Tattoo.jpg"
+      },
+      {
+        id: "owl",
+        title: "Dom Carter Blackwork Owl Tattoo.jpg",
+        creator: "DomCarterTattoo",
+        license: "CC BY-SA 4.0",
+        licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0/",
+        sourceUrl: "https://commons.wikimedia.org/wiki/File:Dom_Carter_Blackwork_Owl_Tattoo.jpg",
+        fileName: "Dom_Carter_Blackwork_Owl_Tattoo.jpg"
+      },
+      {
+        id: "nice-blackwork",
+        title: "Nice Black-work Tattoo (10010721725).jpg",
+        creator: "Tony Alter",
+        license: "CC BY 2.0",
+        licenseUrl: "https://creativecommons.org/licenses/by/2.0/",
+        sourceUrl: "https://commons.wikimedia.org/wiki/File:Nice_Black-work_Tattoo_(10010721725).jpg",
+        fileName: "Nice_Black-work_Tattoo_(10010721725).jpg"
+      },
+      {
+        id: "tattoos",
+        title: "Tattoos.jpg",
+        creator: "Ta2man",
+        license: "Dominio público",
+        licenseUrl: "https://commons.wikimedia.org/wiki/Category:Public_domain",
+        sourceUrl: "https://commons.wikimedia.org/wiki/File:Tattoos.jpg",
+        fileName: "Tattoos.jpg"
+      }
+    ];
+
+    const imageById = Object.fromEntries(IMAGE_CREDITS.map(image => [image.id, image]));
+
+    function commonsImage(imageId) {
+      const image = imageById[imageId];
+      if (!image) return "";
+      return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(image.fileName)}?width=1200`;
+    }
+
+    const DEFAULT_ARTISTS = [
+      {
+        id: 1,
+        name: "Luna Ríos",
+        studio: "Estudio Umbral",
+        area: "Gràcia",
+        distance: 1.2,
+        styles: ["Blackwork", "Botánico"],
+        rating: 4.9,
+        reviewCount: 86,
+        minPrice: 180,
+        maxPrice: 250,
+        nextSlot: "Lun, 26 oct",
+        payment: ["Tarjeta", "Bizum"],
+        deposit: 40,
+        years: 8,
+        verified: true,
+        imageId: "butterfly",
+        bio: "Botánica en negro y trazos que respiran. Diseño piezas únicas que siguen las formas del cuerpo, con calma y atención al detalle.",
+        reviews: [
+          { author: "Marina G.", comment: "Entendió mi idea desde el primer boceto. El resultado se siente muy mío.", rating: 5 }
+        ]
+      },
+      {
+        id: 2,
+        name: "Mateo Black",
+        studio: "Sombra Tattoo",
+        area: "El Raval",
+        distance: 2.8,
+        styles: ["Blackwork", "Geométrico"],
+        rating: 4.8,
+        reviewCount: 64,
+        minPrice: 160,
+        maxPrice: 240,
+        nextSlot: "Mar, 27 oct",
+        payment: ["Tarjeta", "Efectivo"],
+        deposit: 50,
+        years: 11,
+        verified: true,
+        imageId: "dragon",
+        bio: "Geometría, contraste y composiciones de gran formato. Trabajo piezas grandes, mangas y diseños con una estructura visual marcada.",
+        reviews: [
+          { author: "Jordi P.", comment: "Puntual, limpio y con un criterio excelente.", rating: 5 }
+        ]
+      },
+      {
+        id: 3,
+        name: "Vera Ink",
+        studio: "Línea Estudio",
+        area: "Poblenou",
+        distance: 4.1,
+        styles: ["Blackwork", "Fine line"],
+        rating: 4.9,
+        reviewCount: 51,
+        minPrice: 80,
+        maxPrice: 150,
+        nextSlot: "Sáb, 24 oct",
+        payment: ["Bizum", "Efectivo"],
+        deposit: 30,
+        years: 5,
+        verified: true,
+        imageId: "owl",
+        bio: "Línea fina, pequeños flashes y piezas de tamaño reducido. Me gusta trabajar con ideas sencillas y detalles precisos.",
+        reviews: [
+          { author: "Carla S.", comment: "Mi primer tatuaje y me sentí muy cuidada.", rating: 5 }
+        ]
+      },
+      {
+        id: 4,
+        name: "Noa Sumi",
+        studio: "Tinta Viva",
+        area: "Eixample",
+        distance: 1.9,
+        styles: ["Japonés", "Tradicional"],
+        rating: 4.6,
+        reviewCount: 33,
+        minPrice: 200,
+        maxPrice: 420,
+        nextSlot: "Jue, 29 oct",
+        payment: ["Tarjeta"],
+        deposit: 60,
+        years: 14,
+        verified: false,
+        imageId: "nice-blackwork",
+        bio: "Composiciones tradicionales y japonesas, con atención al movimiento, el color y la forma del cuerpo.",
+        reviews: [
+          { author: "Pau R.", comment: "Gran color; las sesiones son largas, pero valen la pena.", rating: 4 }
+        ]
+      },
+      {
+        id: 5,
+        name: "Iván Orna",
+        studio: "Ornamenta",
+        area: "Gràcia",
+        distance: 0.9,
+        styles: ["Ornamental", "Realismo"],
+        rating: 4.7,
+        reviewCount: 27,
+        minPrice: 120,
+        maxPrice: 300,
+        nextSlot: null,
+        payment: ["Tarjeta", "Bizum"],
+        deposit: 40,
+        years: 6,
+        verified: true,
+        imageId: "tattoos",
+        bio: "Ornamental, simetría y realismo. Mi agenda está cerrada por ahora, pero puedes consultar el perfil y guardar tus ideas.",
+        reviews: [
+          { author: "Eva T.", comment: "Detalle impecable.", rating: 5 }
+        ]
+      }
+    ];
+
+    const DEFAULT_APPOINTMENTS = [
+      {
+        ref: "IK-261026",
+        artistId: 1,
+        createdBy: "demo-cliente",
+        date: "2026-10-26",
+        time: "16:00",
+        idea: "Pieza botánica en blackwork",
+        style: "Botánico",
+        zone: "Antebrazo",
+        size: "12–15 cm",
+        budget: "180–250 €",
+        status: "pending",
+        createdAt: Date.now()
+      }
+    ];
+
+    const STATUS_LABELS = {
+      pending: "Pendiente de aceptar",
+      accepted: "Aceptada",
+      reschedule: "Nueva fecha propuesta",
+      rejected: "Rechazada",
+      cancelled: "Cancelada",
+      completed: "Completada"
+    };
+
+    const state = {
+      user: load("user", null),
+      selectedRole: load("role", "cliente"),
+      favorites: load("favorites", []),
+      compare: load("compare", []),
+      messages: load("messages", {}),
+      posts: load("posts", [
+        { id: 1, room: "Mi primer tatuaje", title: "¿Cómo elegir el tamaño de mi primer blackwork?", author: "Alba M.", comments: ["Empieza por una pieza de tamaño medio y pregunta por el cuidado posterior."] },
+        { id: 2, room: "Cuidados", title: "Crema para cicatrizar: ¿qué os ha recomendado vuestro tatuador?", author: "Pau R.", comments: [] }
+      ]),
+      announcements: [
+        { id: "flash", label: "FLASH DAY · 24 OCT", title: "Pequeñas piezas. Grandes historias.", description: "Vera Ink · Diseños exclusivos desde 80 €" },
+        { id: "agenda", label: "AGENDA ABIERTA", title: "Mateo abre agenda de noviembre", description: "Sombra Tattoo · Nuevos huecos disponibles" }
+      ],
+      appointments: load("appointments", DEFAULT_APPOINTMENTS),
+      portfolio: load("portfolio", [
+        { id: 1, title: "Rama botánica", description: "Pieza de demostración para el portafolio.", style: "Botánico", image: "" }
+      ]),
+      filters: load("filters", {
+        query: "",
+        style: "",
+        maxPrice: 450,
+        minRating: 0,
+        payment: "",
+        availableOnly: false,
+        verifiedOnly: false,
+        distance: 10,
+        sort: "recommended"
+      }),
+      availability: load("availability", {
+        days: [1, 2, 3, 4, 5],
+        slots: ["10:00", "16:00"],
+        duration: 2
+      }),
+      reviews: load("reviews", {}),
+      viewMode: "list",
+      selectedMapArtist: null,
+      communityQuery: "",
+      pendingAuthMode: "login"
+    };
+
+    function load(key, fallback) {
+      try {
+        const raw = localStorage.getItem(STORAGE_PREFIX + key);
+        return raw === null ? structuredCloneSafe(fallback) : JSON.parse(raw);
+      } catch (error) {
+        return structuredCloneSafe(fallback);
+      }
+    }
+
+    function structuredCloneSafe(value) {
+      return value === undefined ? value : JSON.parse(JSON.stringify(value));
+    }
+
+    function persist() {
+      const entries = {
+        user: state.user,
+        role: state.selectedRole,
+        favorites: state.favorites,
+        compare: state.compare,
+        messages: state.messages,
+        posts: state.posts,
+        appointments: state.appointments,
+        portfolio: state.portfolio,
+        filters: state.filters,
+        availability: state.availability,
+        reviews: state.reviews
+      };
+
+      try {
+        for (const [key, value] of Object.entries(entries)) {
+          localStorage.setItem(STORAGE_PREFIX + key, JSON.stringify(value));
+        }
+      } catch (error) {
+        showToast("El navegador no pudo guardar todo. Puede que el almacenamiento esté lleno.", true);
+      }
+    }
+
+    function escapeHTML(value) {
+      return String(value ?? "").replace(/[&<>"']/g, character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      })[character]);
+    }
+
+    function initials(name) {
+      return String(name || "IK")
+        .trim()
+        .split(/\s+/)
+        .slice(0, 2)
+        .map(part => part[0] || "")
+        .join("")
+        .toUpperCase();
+    }
+
+    function formatDate(dateString) {
+      if (!dateString) return "Fecha por definir";
+      const date = new Date(`${dateString}T12:00:00`);
+      if (Number.isNaN(date.getTime())) return dateString;
+      return date.toLocaleDateString("es-ES", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      });
+    }
+
+    function formatTime(timestamp) {
+      return new Date(timestamp).toLocaleTimeString("es-ES", {
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
+
+    function showToast(message, isError = false) {
+      const stack = document.getElementById("toastStack");
+      const toast = document.createElement("div");
+      toast.className = `toast${isError ? " error" : ""}`;
+      toast.textContent = message;
+      stack.appendChild(toast);
+      window.setTimeout(() => toast.remove(), 3600);
+    }
+
+    function getArtist(id) {
+      return DEFAULT_ARTISTS.find(artist => artist.id === Number(id));
+    }
+
+    function displayImage(imageId, alt, extraClass = "") {
+      const src = commonsImage(imageId);
+      return `
+        <img
+          class="${extraClass}"
+          src="${escapeHTML(src)}"
+          alt="${escapeHTML(alt)}"
+          loading="lazy"
+          referrerpolicy="no-referrer"
+          onerror="this.style.display='none'; this.parentElement.classList.add('image-failed');"
+        >
+      `;
+    }
+
+    function artistImage(artist, isAvatar = false) {
+      const className = isAvatar ? "artist-avatar" : "cover-photo";
+      const label = isAvatar ? initials(artist.name) : `${artist.styles[0]} · Imagen de referencia`;
+      return `
+        <div class="${className}" aria-label="${escapeHTML(label)}">
+          ${displayImage(artist.imageId, `Imagen de referencia para el estilo ${artist.styles.join(", ")}`)}
+          ${isAvatar ? "" : `<span class="cover-label">${escapeHTML(label)}</span>`}
+        </div>
+      `;
+    }
+
+    function favoriteButton(artistId) {
+      const active = state.favorites.includes(Number(artistId));
+      return `
+        <button
+          class="heart-button${active ? " is-active" : ""}"
+          type="button"
+          data-action="favorite"
+          data-id="${Number(artistId)}"
+          aria-label="${active ? "Quitar de favoritos" : "Añadir a favoritos"}"
+          aria-pressed="${active}"
+        >${active ? "♥" : "♡"}</button>
+      `;
+    }
+
+    function statusPill(status) {
+      const type = ["accepted", "completed"].includes(status) ? "good" : status === "pending" || status === "reschedule" ? "pending" : "";
+      return `<span class="pill-status ${type}">${escapeHTML(STATUS_LABELS[status] || status)}</span>`;
+    }
+
+    function getFilteredArtists() {
+      const filters = state.filters;
+      const query = filters.query.trim().toLowerCase();
+
+      const filtered = DEFAULT_ARTISTS.filter(artist => {
+        const haystack = [artist.name, artist.studio, artist.area, CITY, ...artist.styles].join(" ").toLowerCase();
+        return (!query || haystack.includes(query))
+          && (!filters.style || artist.styles.includes(filters.style))
+          && artist.minPrice <= filters.maxPrice
+          && artist.rating >= filters.minRating
+          && (!filters.payment || artist.payment.includes(filters.payment))
+          && (!filters.availableOnly || Boolean(artist.nextSlot))
+          && (!filters.verifiedOnly || artist.verified)
+          && artist.distance <= filters.distance;
+      });
+
+      const sorters = {
+        recommended: (a, b) => (b.rating * b.reviewCount) - (a.rating * a.reviewCount),
+        rating: (a, b) => b.rating - a.rating,
+        price: (a, b) => a.minPrice - b.minPrice,
+        distance: (a, b) => a.distance - b.distance
+      };
+
+      return filtered.sort(sorters[filters.sort] || sorters.recommended);
+    }
+
+    function artistCard(artist, compact = false) {
+      const selected = state.compare.includes(artist.id);
+      return `
+        <article class="${compact ? "artist-card" : "card"}">
+          ${artistImage(artist)}
+          <div class="artist-heading">
+            ${artistImage(artist, true)}
+            <div class="grow">
+              <div class="artist-name-line">
+                <h3>${escapeHTML(artist.name)} ${artist.verified ? '<span class="accent" title="Perfil de demostración verificado">✓</span>' : ""}</h3>
+                ${favoriteButton(artist.id)}
+              </div>
+              <div class="small">${escapeHTML(artist.studio)} · ${escapeHTML(artist.area)}</div>
+              <div class="small">${artist.distance.toFixed(1)} km de distancia</div>
+            </div>
+          </div>
+          <div style="margin-top: 12px">
+            ${artist.styles.map(style => `<span class="chip">${escapeHTML(style)}</span>`).join("")}
+          </div>
+          <div class="row-between" style="margin-top: 7px">
+            <span>★ ${artist.rating.toFixed(1)} <span class="small">(${artist.reviewCount})</span></span>
+            <span class="price">${artist.minPrice}–${artist.maxPrice} €</span>
+          </div>
+          <div class="small" style="margin-top: 4px">${artist.nextSlot ? `Próximo hueco: ${escapeHTML(artist.nextSlot)}` : "Agenda cerrada por ahora"}</div>
+          <label class="check-line">
+            <input type="checkbox" data-action="compare-checkbox" data-id="${artist.id}" ${selected ? "checked" : ""}>
+            Añadir al comparador
+          </label>
+          <a class="btn btn-block btn-primary" href="#/artist/${artist.id}">Ver perfil y solicitar cita ↗</a>
+        </article>
+      `;
+    }
+
+    const views = {};
+
+    views.welcome = () => `
+      <header class="topbar row-between">
+        <a class="logo" href="#/">INKORA<span class="logo-mark">✳</span></a>
+        <span class="small">EL ARTE EMPIEZA AQUÍ</span>
+      </header>
+
+      <section class="hero-photo" aria-label="Fotografía de referencia de tatuajes">
+        ${displayImage("dragon", "Tatuaje blackwork de referencia")}
+        <span class="hero-stamp" aria-hidden="true">✳</span>
+        <span class="hero-caption">PIEL. ARTE. IDENTIDAD. · TU HISTORIA, EN TINTA.</span>
+      </section>
+
+      <div class="kicker">Encuentra tu lenguaje</div>
+      <h1>Tu piel.<br>Tu historia.</h1>
+      <p class="muted" style="font-size: 17px; max-width: 560px">
+        Descubre artistas, explora estilos y conecta con quien pueda transformar tu idea en tinta.
+      </p>
+
+      <div class="kicker" style="margin-top: 25px">¿Cómo quieres vivir INKORA?</div>
+      <div class="role-grid">
+        <button class="role-choice ${state.selectedRole === "cliente" ? "selected" : ""}" data-action="select-role" data-id="cliente" type="button">
+          <span class="accent" style="font-size: 24px">✦</span>
+          <strong style="display: block; margin-top: 7px">Soy cliente</strong>
+          <span class="small">Encuentra a tu artista</span>
+        </button>
+        <button class="role-choice ${state.selectedRole === "tatuador" ? "selected" : ""}" data-action="select-role" data-id="tatuador" type="button">
+          <span class="accent" style="font-size: 24px">✎</span>
+          <strong style="display: block; margin-top: 7px">Soy tatuador</strong>
+          <span class="small">Comparte tu arte</span>
+        </button>
+      </div>
+
+      <a class="btn btn-primary btn-block" href="#/auth/register">Crear cuenta ↗</a>
+      <a class="btn btn-block" href="#/auth/login">Iniciar sesión</a>
+      <button class="btn btn-block btn-quiet" type="button" data-action="guest">Entrar sin cuenta · Probar INKORA</button>
+
+      <p class="small" style="margin-top: 20px; text-align: center">
+        Al continuar, aceptas los <a class="accent" href="#/legal">términos de uso</a> y la <a class="accent" href="#/legal">política de privacidad</a> de esta demostración.
+      </p>
+    `;
+
+    views.auth = mode => {
+      const isRegister = mode === "register";
+      return `
+        <a class="small" href="#/">← Volver al inicio</a>
+        <div style="margin-top: 25px">
+          <a class="logo" href="#/">INKORA<span class="logo-mark">✳</span></a>
+          <h1 style="margin-top: 28px">${isRegister ? "Crea tu cuenta." : "Qué bueno verte."}</h1>
+          <p class="muted">${isRegister ? "Empieza a descubrir tu próximo tatuaje." : "Entra para continuar donde lo dejaste."}</p>
+        </div>
+        <div class="card">
+          <div class="small">Rol seleccionado: <strong style="color: var(--text)">${escapeHTML(state.selectedRole)}</strong></div>
+          <form id="authForm" data-mode="${isRegister ? "register" : "login"}" novalidate>
+            ${isRegister ? '<label class="field">Nombre<input name="name" autocomplete="name" maxlength="80" placeholder="Tu nombre"></label>' : ""}
+            <label class="field">Correo electrónico<input name="email" type="email" autocomplete="email" placeholder="nombre@correo.com" maxlength="150" required></label>
+            <label class="field">Contraseña<input name="password" type="password" autocomplete="${isRegister ? "new-password" : "current-password"}" minlength="6" placeholder="Mínimo 6 caracteres" required></label>
+            <div id="authError" class="error-text" role="alert"></div>
+            <button class="btn btn-primary btn-block" type="submit">${isRegister ? "Crear cuenta" : "Iniciar sesión"}</button>
+          </form>
+          <div class="divider"></div>
+          <p class="small">Este prototipo guarda datos localmente en el navegador. No uses una contraseña real: no existe un servidor de autenticación.</p>
+        </div>
+        <button class="btn btn-block" type="button" data-action="guest">Probar sin cuenta</button>
+        <p class="small" style="text-align: center; margin-top: 17px">${isRegister ? '¿Ya tienes cuenta? <a class="accent" href="#/auth/login">Inicia sesión</a>' : '¿Es tu primera vez? <a class="accent" href="#/auth/register">Crea una cuenta de demostración</a>'}</p>
+      `;
+    };
+
+    views.legal = () => `
+      <a href="#/" class="small">← Volver</a>
+      <h1 style="margin-top: 22px">Términos y privacidad</h1>
+      <div class="legal-note">
+        INKORA es un prototipo de demostración. No hay cuentas reales, pagos, reservas confirmadas ni mensajes enviados a terceros. Los datos creados se guardan en el almacenamiento local de este navegador. La autenticación no es segura; no introduzcas contraseñas reales.
+      </div>
+      <h2>Imágenes</h2>
+      <p class="muted">Las fotografías de ejemplo se cargan desde Wikimedia Commons. Consulta el apartado de créditos para ver autoría, fuente y licencia. Las imágenes no certifican que los perfiles ficticios hayan realizado esos tatuajes.</p>
+      <h2>Modelo de negocio</h2>
+      <p class="muted">Las funciones de pago, depósitos, recompensas y comisiones no están implementadas en esta demostración.</p>
+      <a class="btn btn-block" href="#/credits">Consultar créditos visuales</a>
+    `;
+
+    views.home = () => {
+      const greetingName = escapeHTML(state.user?.name || "Alex");
+      const picks = DEFAULT_ARTISTS.slice(0, 2);
+      return `
+        <header class="topbar row-between">
+          <a class="logo" href="#/home">INKORA<span class="logo-mark">✳</span></a>
+          <span class="small">${CITY.toUpperCase()}</span>
+        </header>
+        <p class="small" style="margin-top: 21px">Hola, ${greetingName}. Hazlo tuyo.</p>
+        <h1>Tu próxima historia está a un artista de distancia.</h1>
+
+        <form id="homeSearch" class="row" style="margin: 20px 0">
+          <input class="search-input" type="search" name="query" placeholder="Artista, estilo o ciudad" aria-label="Buscar artistas" value="${escapeHTML(state.filters.query)}">
+          <button class="btn btn-primary" type="submit">Buscar</button>
+        </form>
+
+        <div class="section-heading">
+          <h2>Talento que conecta</h2>
+          <a class="small accent" href="#/results">Ver todos ↗</a>
+        </div>
+        <div class="artist-grid">${picks.map(artist => artistCard(artist, true)).join("")}</div>
+
+        <div class="section-heading">
+          <h2>Encuentra tu lenguaje</h2>
+          <a class="small accent" href="#/results">Explorar ↗</a>
+        </div>
+        <div>${STYLE_LIST.slice(0, 6).map(style => `<button class="chip" type="button" data-action="quick-style" data-id="${escapeHTML(style)}">${escapeHTML(style)}</button>`).join("")}</div>
+
+        <h2>Accesos rápidos</h2>
+        <div class="artist-grid">
+          <a class="card" href="#/explore"><div class="accent" style="font-size: 24px">⌖</div><strong>Explorar mapa</strong><div class="small">Artistas cerca de ti</div></a>
+          <a class="card" href="#/compare"><div class="accent" style="font-size: 24px">▥</div><strong>Comparador</strong><div class="small">Compara hasta 3 perfiles</div></a>
+          <a class="card" href="#/favorites"><div class="accent" style="font-size: 24px">♡</div><strong>Favoritos</strong><div class="small">Tus artistas guardados</div></a>
+          <a class="card" href="#/community"><div class="accent" style="font-size: 24px">☍</div><strong>Comunidad</strong><div class="small">Ideas y conversaciones</div></a>
+        </div>
+
+        <div class="section-heading"><h2>En la escena</h2><a class="small accent" href="#/community">Ver novedades ↗</a></div>
+        ${state.announcements.map(item => `
+          <a class="announcement" href="#/community" style="margin-bottom: 10px">
+            <div class="kicker">${escapeHTML(item.label)}</div>
+            <h3 style="margin-top: 6px">${escapeHTML(item.title)}</h3>
+            <div class="small">${escapeHTML(item.description)}</div>
+          </a>
+        `).join("")}
+
+        <div class="card card-accent" style="margin-top: 23px">
+          <div class="kicker">Para quienes crean</div>
+          <h2 style="margin-top: 5px">Tu estudio, tu estilo.</h2>
+          <p class="small">Organiza solicitudes, publica piezas de portafolio y gestiona tu disponibilidad en este panel de demostración.</p>
+          <button class="btn btn-primary btn-block" type="button" data-action="switch-professional">Abrir panel de tatuador →</button>
+        </div>
+      `;
+    };
+
+    function filtersMarkup() {
+      const filters = state.filters;
+      return `
+        <details class="card filter-panel" ${filters.style || filters.payment || filters.availableOnly || filters.verifiedOnly || filters.minRating > 0 || filters.maxPrice < 450 ? "open" : ""}>
+          <summary>Filtros y preferencias</summary>
+          <label class="field">Estilo
+            <select data-filter="style">
+              <option value="">Todos los estilos</option>
+              ${STYLE_LIST.map(style => `<option value="${escapeHTML(style)}" ${filters.style === style ? "selected" : ""}>${escapeHTML(style)}</option>`).join("")}
+            </select>
+          </label>
+          <label class="field">
+            <span class="range-label"><span>Precio máximo</span><strong>${filters.maxPrice} €</strong></span>
+            <input type="range" min="80" max="450" step="10" value="${filters.maxPrice}" data-filter="maxPrice">
+          </label>
+          <label class="field">
+            <span class="range-label"><span>Valoración mínima</span><strong>${filters.minRating ? filters.minRating.toFixed(1) : "Cualquiera"}</strong></span>
+            <input type="range" min="0" max="5" step="0.1" value="${filters.minRating}" data-filter="minRating">
+          </label>
+          <label class="field">
+            <span class="range-label"><span>Distancia máxima</span><strong>${filters.distance} km</strong></span>
+            <input type="range" min="1" max="10" step="1" value="${filters.distance}" data-filter="distance">
+          </label>
+          <label class="field">Método de pago
+            <select data-filter="payment">
+              <option value="">Cualquiera</option>
+              ${["Tarjeta", "Bizum", "Efectivo"].map(payment => `<option value="${payment}" ${filters.payment === payment ? "selected" : ""}>${payment}</option>`).join("")}
+            </select>
+          </label>
+          <label class="check-line"><input type="checkbox" data-filter="availableOnly" ${filters.availableOnly ? "checked" : ""}> Solo artistas con disponibilidad</label>
+          <label class="check-line"><input type="checkbox" data-filter="verifiedOnly" ${filters.verifiedOnly ? "checked" : ""}> Solo perfiles marcados como verificados</label>
+          <button class="btn btn-small" type="button" data-action="reset-filters" style="margin-top: 14px">Restablecer filtros</button>
+        </details>
+      `;
+    }
+
+    views.results = () => {
+      const artists = getFilteredArtists();
+      const mapMode = state.viewMode === "map";
+      return `
+        <div class="row-between"><a class="small" href="#/home">← Inicio</a><a class="small accent" href="#/favorites">♥ Favoritos</a></div>
+        <div class="kicker" style="margin-top: 17px">${CITY} / DIRECTORIO</div>
+        <h1>Encuentra tu artista.</h1>
+        <form id="resultsSearch"><input class="search-input" type="search" name="query" value="${escapeHTML(state.filters.query)}" placeholder="Nombre artístico, estilo o zona" aria-label="Buscar artistas"></form>
+        ${filtersMarkup()}
+        <div class="row-between" style="margin: 14px 0">
+          <span class="small">${artists.length} resultado${artists.length === 1 ? "" : "s"}</span>
+          <div class="row">
+            <button class="btn btn-small ${mapMode ? "btn-primary" : ""}" data-action="view-mode" data-id="map" type="button">Mapa</button>
+            <button class="btn btn-small ${!mapMode ? "btn-primary" : ""}" data-action="view-mode" data-id="list" type="button">Lista</button>
+          </div>
+        </div>
+        ${mapMode ? mapMarkup(artists) : artists.length ? `<div>${artists.map(artist => artistCard(artist)).join("")}</div>` : emptyState("No hay coincidencias", "Prueba a cambiar los filtros o limpiar la búsqueda.", "reset-filters")}
+        <div class="card card-accent" style="margin-top: 16px">
+          <h3>Elegidos, cara a cara.</h3>
+          <p class="small">${state.compare.length ? state.compare.map(id => escapeHTML(getArtist(id)?.name || "Artista")).join(" · ") : "Marca «Añadir al comparador» en dos o más artistas."}</p>
+          <a class="btn btn-primary btn-block" href="#/compare">Abrir comparador (${state.compare.length}) →</a>
+        </div>
+      `;
+    };
+
+    function mapMarkup(artists) {
+      if (!artists.length) return emptyState("No hay artistas en el mapa", "Modifica los filtros para ver resultados.", "reset-filters");
+      const positions = [
+        [22, 26], [55, 32], [76, 58], [34, 70], [63, 78]
+      ];
+      return `
+        <div class="map-placeholder" role="group" aria-label="Mapa esquemático de demostración">
+          <div class="map-path"></div>
+          ${artists.map((artist, index) => {
+            const [left, top] = positions[index % positions.length];
+            return `<button type="button" class="map-pin ${state.selectedMapArtist === artist.id ? "active" : ""}" style="left:${left}%;top:${top}%" data-action="map-pin" data-id="${artist.id}" aria-label="Ver ${escapeHTML(artist.name)}">${artist.minPrice} €</button>`;
+          }).join("")}
+          <span class="small" style="position:absolute;bottom:8px;left:10px;background:#131313cc;padding:5px 8px;border-radius:8px">Mapa ilustrativo, no geolocalizado</span>
+        </div>
+        ${state.selectedMapArtist && artists.some(artist => artist.id === state.selectedMapArtist) ? artistCard(getArtist(state.selectedMapArtist)) : '<p class="small" style="margin-top: 10px">Selecciona un marcador para ver el perfil del artista.</p>'}
+      `;
+    }
+
+    function emptyState(title, description, action = "") {
+      return `
+        <div class="empty-state">
+          <div class="empty-symbol">✳</div>
+          <h3>${escapeHTML(title)}</h3>
+          <p>${escapeHTML(description)}</p>
+          ${action ? `<button class="btn btn-small" type="button" data-action="${escapeHTML(action)}">Volver a intentarlo</button>` : ""}
+        </div>
+      `;
+    }
+
+    views.explore = () => {
+      const previous = state.viewMode;
+      state.viewMode = "map";
+      const markup = views.results();
+      state.viewMode = previous;
+      return markup;
+    };
+
+    views.artist = id => {
+      const artist = getArtist(id);
+      if (!artist) return views.notFound();
+      const userReviews = Object.values(state.reviews).filter(review => review.artistId === artist.id);
+      const allReviews = [...artist.reviews, ...userReviews.map(review => ({ author: review.author, comment: review.comment, rating: review.rating }))];
+      return `
+        <div class="row-between"><a class="small" href="#/results">← Volver al directorio</a>${favoriteButton(artist.id)}</div>
+        <section class="hero-photo" style="height: clamp(220px, 52vw, 370px); margin-top: 16px">
+          ${displayImage(artist.imageId, `Ejemplo visual de ${artist.styles.join(", ")}`)}
+          <span class="hero-caption">IMAGEN DE REFERENCIA · ${escapeHTML(artist.styles[0].toUpperCase())}</span>
+        </section>
+        <div class="row-between">
+          <div>
+            <div class="kicker">${escapeHTML(artist.studio)}</div>
+            <h1 style="margin-top: 5px">${escapeHTML(artist.name)} ${artist.verified ? '<span class="accent" title="Perfil de ejemplo marcado como verificado">✓</span>' : ""}</h1>
+            <p class="small">${escapeHTML(artist.area)}, ${CITY} · ${artist.distance.toFixed(1)} km</p>
+          </div>
+          <div class="price">★ ${artist.rating.toFixed(1)}<div class="small" style="text-align:right">${artist.reviewCount} reseñas</div></div>
+        </div>
+        <div class="stat-row" style="margin: 20px 0">
+          <div><strong>${artist.years} años</strong><div class="small">de experiencia</div></div>
+          <div><strong>${artist.minPrice}–${artist.maxPrice} €</strong><div class="small">precio estimado</div></div>
+          <div><strong>${artist.nextSlot ? "Disponible" : "Agenda cerrada"}</strong><div class="small">estado de ejemplo</div></div>
+        </div>
+        <div>${artist.styles.map(style => `<span class="chip chip-active">${escapeHTML(style)}</span>`).join("")}</div>
+        <h2>Sobre el artista</h2>
+        <p class="muted">${escapeHTML(artist.bio)}</p>
+        <div class="card">
+          <div class="row-between"><strong>Disponibilidad</strong>${artist.nextSlot ? '<span class="pill-status good">Próximo hueco</span>' : '<span class="pill-status">Agenda cerrada</span>'}</div>
+          <p style="margin-top: 10px">${artist.nextSlot ? escapeHTML(artist.nextSlot) : "Este artista no acepta solicitudes nuevas en este momento."}</p>
+          <div class="small">Pagos indicados: ${artist.payment.map(escapeHTML).join(", ")}</div>
+          <div class="small">Señal orientativa: ${artist.deposit} € (no se cobra en la demostración).</div>
+          ${artist.nextSlot ? `<a class="btn btn-primary btn-block" href="#/request/${artist.id}">Solicitar una cita ↗</a>` : '<button class="btn btn-block" type="button" disabled>Agenda cerrada</button>'}
+          <div class="button-row" style="margin-top: 10px">
+            <button class="btn" type="button" data-action="toggle-compare" data-id="${artist.id}">${state.compare.includes(artist.id) ? "Quitar del comparador" : "Comparar perfil"}</button>
+            <a class="btn" href="#/chat/${artist.id}">Abrir chat</a>
+          </div>
+        </div>
+        <h2>Reseñas</h2>
+        ${allReviews.map(review => `
+          <div class="card">
+            <div class="row-between"><strong>${escapeHTML(review.author)}</strong><span class="accent">${"★".repeat(Number(review.rating) || 0)}</span></div>
+            <p style="margin: 8px 0 0">${escapeHTML(review.comment)}</p>
+            <div class="small" style="margin-top: 8px">Reseña de demostración</div>
+          </div>
+        `).join("")}
+        <div class="legal-note">Las fotografías y los perfiles de artistas son contenido de demostración. No uses este prototipo para realizar pagos o confirmar una reserva real.</div>
+      `;
+    };
+
+    views.compare = () => {
+      const artists = state.compare.map(getArtist).filter(Boolean);
+      if (artists.length < 2) {
+        return `
+          <a class="small" href="#/results">← Volver al directorio</a>
+          <h1 style="margin-top: 20px">Comparador</h1>
+          ${emptyState("Elige al menos dos artistas", "Desde el directorio, marca la casilla «Añadir al comparador».", "go-results")}
+          <a class="btn btn-primary btn-block" href="#/results">Ir a resultados</a>
+        `;
+      }
+
+      const rows = [
+        ["Estilos", artist => artist.styles.join(", ")],
+        ["Precio orientativo", artist => `${artist.minPrice}–${artist.maxPrice} €`],
+        ["Valoración", artist => `★ ${artist.rating.toFixed(1)} (${artist.reviewCount})`],
+        ["Disponibilidad", artist => artist.nextSlot || "Agenda cerrada"],
+        ["Zona", artist => `${artist.area} · ${artist.distance.toFixed(1)} km`],
+        ["Métodos de pago", artist => artist.payment.join(", ")],
+        ["Verificado en la demo", artist => artist.verified ? "Sí" : "No"]
+      ];
+
+      return `
+        <a class="small" href="#/results">← Volver al directorio</a>
+        <h1 style="margin-top: 20px">Cara a cara.</h1>
+        <p class="muted">Compara precios orientativos, estilos y disponibilidad. Los datos son ficticios.</p>
+        <div class="table-scroll card" style="padding: 0">
+          <table>
+            <thead><tr><th>Característica</th>${artists.map(artist => `<th><a class="accent" href="#/artist/${artist.id}">${escapeHTML(artist.name)}</a><br><button class="btn btn-small" style="margin-top: 8px" data-action="toggle-compare" data-id="${artist.id}" type="button">Quitar</button></th>`).join("")}</tr></thead>
+            <tbody>${rows.map(([label, getter]) => `<tr><th>${escapeHTML(label)}</th>${artists.map(artist => `<td>${escapeHTML(getter(artist))}</td>`).join("")}</tr>`).join("")}</tbody>
+          </table>
+        </div>
+      `;
+    };
+
+    views.favorites = () => {
+      const artists = state.favorites.map(getArtist).filter(Boolean);
+      return `
+        <h1>Favoritos.</h1>
+        <p class="muted">Los artistas que guardes aparecerán aquí.</p>
+        ${artists.length ? `<div>${artists.map(artist => artistCard(artist)).join("")}</div>` : emptyState("Todavía no hay favoritos", "Pulsa el corazón en la tarjeta de un artista para guardarlo.", "go-results")}
+        <a class="btn btn-primary btn-block" href="#/results">Explorar artistas</a>
+      `;
+    };
+
+    views.request = id => {
+      const artist = getArtist(id);
+      if (!artist) return views.notFound();
+      if (!artist.nextSlot) return `<h1>Agenda cerrada</h1><p class="muted">Este artista no acepta solicitudes en este momento.</p><a class="btn" href="#/artist/${artist.id}">Volver al perfil</a>`;
+      const today = new Date();
+      const minDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+      return `
+        <a class="small" href="#/artist/${artist.id}">← Volver al perfil</a>
+        <h1 style="margin-top: 20px">Pedir cita con ${escapeHTML(artist.name)}.</h1>
+        <p class="muted">Completa los detalles de tu idea. En este prototipo no se realiza ningún cobro ni se confirma una reserva real.</p>
+        <div class="card row-start">${artistImage(artist, true)}<div class="grow"><strong>${escapeHTML(artist.name)}</strong><div class="small">${escapeHTML(artist.studio)} · ${escapeHTML(artist.area)}</div><div class="small">Precio estimado: ${artist.minPrice}–${artist.maxPrice} €</div></div></div>
+        <form id="requestForm" data-artist-id="${artist.id}" novalidate>
+          <label class="field">Cuéntale tu idea<textarea name="idea" maxlength="500" placeholder="Diseño, inspiración, detalles importantes…" required></textarea></label>
+          <label class="field">Estilo<select name="style">${artist.styles.map(style => `<option value="${escapeHTML(style)}">${escapeHTML(style)}</option>`).join("")}</select></label>
+          <div class="row row-mobile-stack">
+            <label class="field grow">Zona del cuerpo<input name="zone" maxlength="100" placeholder="Antebrazo" required></label>
+            <label class="field grow">Tamaño aproximado<input name="size" maxlength="80" placeholder="12–15 cm"></label>
+          </div>
+          <div class="row row-mobile-stack">
+            <label class="field grow">Presupuesto<input name="budget" maxlength="80" value="${artist.minPrice}–${artist.maxPrice} €"></label>
+            <label class="field grow">Fecha preferida<input name="date" type="date" min="${minDate}" required></label>
+          </div>
+          <label class="field">Horario<select name="time">${state.availability.slots.map(slot => `<option value="${escapeHTML(slot)}">${escapeHTML(slot)}</option>`).join("")}</select></label>
+          <div class="small" style="margin-top: 8px">Horario de muestra. La disponibilidad no está conectada con una agenda real.</div>
+          <div id="requestError" class="error-text" role="alert"></div>
+          <button class="btn btn-primary btn-block" type="submit">Enviar solicitud de demostración ↗</button>
+        </form>
+      `;
+    };
+
+    views.appointments = () => {
+      const isProfessional = state.user?.role === "tatuador";
+      const appointments = state.appointments.filter(appointment => isProfessional ? appointment.artistId === 1 : appointment.createdBy === state.user?.id);
+      return `
+        <h1>${isProfessional ? "Agenda y solicitudes." : "Mis citas."}</h1>
+        <p class="muted">${isProfessional ? "Gestiona las solicitudes de prueba del perfil profesional." : "Consulta el estado de tus solicitudes de cita."}</p>
+        ${isProfessional ? professionalAvailabilityMarkup() : ""}
+        ${appointments.length ? appointments.map(appointment => appointmentCard(appointment, isProfessional)).join("") : emptyState("Todavía no tienes solicitudes", isProfessional ? "Las solicitudes de ejemplo aparecerán en este panel." : "Explora artistas y envía una solicitud de demostración.", "go-results")}
+      `;
+    };
+
+    function appointmentCard(appointment, isProfessional) {
+      const artist = getArtist(appointment.artistId);
+      return `
+        <article class="card">
+          <div class="row-between"><strong>${isProfessional ? escapeHTML(state.user?.name || "Artista") : escapeHTML(artist?.name || "Artista")}</strong>${statusPill(appointment.status)}</div>
+          <p style="margin: 9px 0 3px">${escapeHTML(appointment.idea)}</p>
+          <div class="small">${escapeHTML(formatDate(appointment.date))} · ${escapeHTML(appointment.time)}</div>
+          <div class="small">${escapeHTML(appointment.zone)} · ${escapeHTML(appointment.size || "Tamaño por definir")} · Ref. ${escapeHTML(appointment.ref)}</div>
+          <div class="row wrap" style="margin-top: 12px">
+            <a class="btn btn-small" href="#/appointment/${encodeURIComponent(appointment.ref)}">Ver detalles</a>
+            ${isProfessional && appointment.status === "pending" ? `
+              <button class="btn btn-small btn-primary" data-action="appointment-status" data-ref="${escapeHTML(appointment.ref)}" data-status="accepted" type="button">Aceptar</button>
+              <button class="btn btn-small" data-action="appointment-status" data-ref="${escapeHTML(appointment.ref)}" data-status="rejected" type="button">Rechazar</button>
+              <button class="btn btn-small" data-action="appointment-status" data-ref="${escapeHTML(appointment.ref)}" data-status="reschedule" type="button">Proponer cambio</button>
+            ` : ""}
+            ${isProfessional && appointment.status === "accepted" ? `<button class="btn btn-small btn-primary" data-action="appointment-status" data-ref="${escapeHTML(appointment.ref)}" data-status="completed" type="button">Marcar completada</button>` : ""}
+            ${!isProfessional && ["pending", "accepted", "reschedule"].includes(appointment.status) ? `<button class="btn btn-small" data-action="appointment-status" data-ref="${escapeHTML(appointment.ref)}" data-status="cancelled" type="button">Cancelar</button>` : ""}
+          </div>
+        </article>
+      `;
+    }
+
+    function professionalAvailabilityMarkup() {
+      const availability = state.availability;
+      return `
+        <details class="card filter-panel">
+          <summary>Gestionar disponibilidad (demo)</summary>
+          <div class="small" style="margin: 10px 0">Días de atención</div>
+          <div class="row wrap">${DAYS.map((day, index) => `<label class="check-line"><input type="checkbox" data-availability-day="${index}" ${availability.days.includes(index) ? "checked" : ""}>${day}</label>`).join("")}</div>
+          <div class="small" style="margin: 15px 0 4px">Franjas horarias</div>
+          <div class="row wrap">${TIME_SLOTS.map(slot => `<label class="check-line"><input type="checkbox" data-availability-slot="${escapeHTML(slot)}" ${availability.slots.includes(slot) ? "checked" : ""}>${escapeHTML(slot)}</label>`).join("")}</div>
+          <label class="field">Duración estimada
+            <select data-availability-duration>${[1, 2, 3, 4].map(hours => `<option value="${hours}" ${availability.duration === hours ? "selected" : ""}>${hours} hora${hours === 1 ? "" : "s"}</option>`).join("")}</select>
+          </label>
+          <button class="btn btn-small btn-primary" data-action="save-availability" type="button" style="margin-top: 12px">Guardar disponibilidad</button>
+        </details>
+        ${portfolioMarkup()}
+      `;
+    }
+
+    function portfolioMarkup() {
+      return `
+        <h2>Portafolio de demostración</h2>
+        ${state.portfolio.map(piece => `
+          <div class="card row-start">
+            ${piece.image ? `<div class="artist-avatar">${displayDataImage(piece.image, piece.title)}</div>` : `<div class="artist-avatar" style="display:grid;place-items:center;color:var(--accent);font-size:23px">✳</div>`}
+            <div class="grow"><strong>${escapeHTML(piece.title)}</strong><div class="small">${escapeHTML(piece.style)}</div><div class="small">${escapeHTML(piece.description || "Sin descripción")}</div></div>
+            <button class="btn btn-small" data-action="delete-piece" data-id="${piece.id}" type="button">Eliminar</button>
+          </div>
+        `).join("")}
+        <form id="portfolioForm" class="card" novalidate>
+          <h3>Añadir una pieza</h3>
+          <label class="field">Título<input name="title" maxlength="80" placeholder="Rama botánica" required></label>
+          <label class="field">Descripción<textarea name="description" maxlength="250" placeholder="Detalles de la pieza"></textarea></label>
+          <label class="field">Estilo<select name="style">${STYLE_LIST.map(style => `<option>${escapeHTML(style)}</option>`).join("")}</select></label>
+          <label class="field">Imagen opcional (JPG o PNG, hasta 1 MB)<input name="image" type="file" accept="image/jpeg,image/png"></label>
+          <div id="portfolioError" class="error-text" role="alert"></div>
+          <button class="btn btn-primary btn-block" type="submit">Añadir al portafolio</button>
+        </form>
+        <p class="small">Las imágenes cargadas se guardan localmente en este navegador. No se publican en Internet.</p>
+      `;
+    }
+
+    function displayDataImage(dataUrl, alt) {
+      return `<img src="${escapeHTML(dataUrl)}" alt="${escapeHTML(alt)}" loading="lazy">`;
+    }
+
+    views.appointment = ref => {
+      const appointment = state.appointments.find(item => item.ref === ref);
+      if (!appointment) return views.notFound();
+      const artist = getArtist(appointment.artistId);
+      return `
+        <a class="small" href="#/appointments">← Volver a mis citas</a>
+        <div style="margin-top: 20px" class="kicker">${escapeHTML(appointment.ref)}</div>
+        <h1>Tu solicitud.</h1>
+        <div class="card">
+          <div class="row-between"><strong>${escapeHTML(artist?.name || "Artista")}</strong>${statusPill(appointment.status)}</div>
+          <hr class="divider">
+          <strong>${escapeHTML(appointment.idea)}</strong>
+          <p class="muted" style="margin-top: 9px">${escapeHTML(appointment.zone)} · ${escapeHTML(appointment.size || "Tamaño por definir")}</p>
+          <p>${escapeHTML(formatDate(appointment.date))}<br>${escapeHTML(appointment.time)}</p>
+          <div class="small">Presupuesto orientativo: ${escapeHTML(appointment.budget || "No indicado")}</div>
+          <div class="legal-note" style="margin-top: 15px">Esta solicitud es local y simulada. No se ha enviado al artista ni se ha efectuado ningún pago.</div>
+        </div>
+        <h2>¿Qué sigue?</h2>
+        <ol class="step-list"><li>El perfil profesional revisa la solicitud (simulado).</li><li>Ambas partes pueden conversar desde el chat de demostración.</li><li>Una reserva real requeriría un servicio de backend y un proceso de pago seguro.</li></ol>
+        <a class="btn btn-primary btn-block" href="#/chat/${appointment.artistId}">Abrir conversación</a>
+      `;
+    };
+
+    views.messages = () => {
+      const keys = Object.keys(state.messages);
+      if (!keys.length) {
+        return `<h1>Mensajes.</h1>${emptyState("Todavía no hay conversaciones", "Abre un chat desde el perfil de un artista. Los mensajes solo se guardan en tu navegador.", "go-results")}`;
+      }
+      return `
+        <h1>Mensajes.</h1>
+        <p class="muted">Chats locales de demostración; no se envían a terceros.</p>
+        ${keys.map(key => {
+          const artist = getArtist(key);
+          const messages = state.messages[key] || [];
+          const lastMessage = messages[messages.length - 1];
+          return `<a class="card row-start" href="#/chat/${key}">${artist ? artistImage(artist, true) : '<div class="artist-avatar"></div>'}<div class="grow"><strong>${escapeHTML(artist?.name || "Conversación")}</strong><div class="small">${escapeHTML(lastMessage?.text || "Sin mensajes")}</div></div></a>`;
+        }).join("")}
+      `;
+    };
+
+    views.chat = id => {
+      const artist = getArtist(id);
+      if (!artist) return views.notFound();
+      const messages = state.messages[artist.id] || [];
+      return `
+        <div class="row-between"><a class="small" href="#/messages">← Mensajes</a><strong>${escapeHTML(artist.name)}</strong></div>
+        <p class="small" style="margin-top: 12px">Demostración local: los mensajes no llegan al artista.</p>
+        <div class="message-list">
+          ${messages.length ? messages.map(message => `
+            <div class="message-bubble ${message.mine ? "mine" : ""}">
+              ${escapeHTML(message.text)}
+              <div class="message-time">${escapeHTML(formatTime(message.timestamp))}</div>
+            </div>
+          `).join("") : '<div class="empty-state">Sin mensajes todavía. Empieza con una pregunta sobre tu idea.</div>'}
+        </div>
+        <form id="chatForm" data-artist-id="${artist.id}" class="row" style="align-items: stretch">
+          <input class="search-input" name="text" maxlength="1000" placeholder="Escribe un mensaje…" aria-label="Mensaje" required>
+          <button class="btn btn-primary" type="submit">Enviar</button>
+        </form>
+      `;
+    };
+
+    views.community = () => {
+      const query = state.communityQuery.trim().toLowerCase();
+      const posts = state.posts.filter(post => `${post.title} ${post.room} ${post.author}`.toLowerCase().includes(query));
+      return `
+        <h1>Comunidad.</h1>
+        <p class="muted">Ideas, experiencias y preguntas sobre el mundo del tatuaje.</p>
+        <h2>Novedades</h2>
+        ${state.announcements.map(item => `<div class="announcement" style="margin-bottom: 10px"><div class="kicker">${escapeHTML(item.label)}</div><h3 style="margin-top: 6px">${escapeHTML(item.title)}</h3><div class="small">${escapeHTML(item.description)}</div></div>`).join("")}
+        <h2>Salas y conversaciones</h2>
+        <input class="search-input" id="communitySearch" type="search" value="${escapeHTML(state.communityQuery)}" placeholder="Buscar temas" aria-label="Buscar temas de la comunidad">
+        ${posts.length ? posts.map(post => `
+          <article class="card" style="margin-top: 12px">
+            <div class="kicker">${escapeHTML(post.room)}</div>
+            <h3 style="margin-top: 7px">${escapeHTML(post.title)}</h3>
+            <div class="small">Por ${escapeHTML(post.author)} · ${post.comments.length} respuesta${post.comments.length === 1 ? "" : "s"}</div>
+            ${post.comments.map(comment => `<div class="card card-soft" style="margin: 10px 0 0;padding: 10px">↳ ${escapeHTML(comment)}</div>`).join("")}
+            <form class="comment-form row" data-post-id="${post.id}" style="margin-top: 12px">
+              <input class="search-input" name="comment" maxlength="300" placeholder="Escribe una respuesta…" aria-label="Respuesta" required>
+              <button class="btn btn-small" type="submit">Responder</button>
+            </form>
+          </article>
+        `).join("") : emptyState("Sin coincidencias", "Prueba otra búsqueda.")}
+        <form id="newPostForm" class="card" style="margin-top: 20px">
+          <h3>Crear tema</h3>
+          <label class="field">Título<input name="title" maxlength="140" placeholder="¿Qué quieres compartir?" required></label>
+          <label class="field">Sala<select name="room"><option>General</option><option>Mi primer tatuaje</option><option>Cuidados</option><option>Diseño e inspiración</option></select></label>
+          <button class="btn btn-primary btn-block" type="submit">Publicar tema</button>
+        </form>
+      `;
+    };
+
+    views.profile = () => {
+      const user = state.user;
+      if (!user) return `<h1>Perfil.</h1><a class="btn btn-primary btn-block" href="#/auth/login">Iniciar sesión</a>`;
+      return `
+        <h1>Tu perfil.</h1>
+        <div class="card">
+          <div class="row-start"><div class="artist-avatar" style="display:grid;place-items:center;font-weight:900;font-size:21px">${escapeHTML(initials(user.name))}</div><div class="grow"><strong>${escapeHTML(user.name)}</strong><div class="small">${escapeHTML(user.email)}</div><div class="small">Rol: ${escapeHTML(user.role)}</div></div></div>
+          <form id="profileForm">
+            <label class="field">Nombre<input name="name" maxlength="80" value="${escapeHTML(user.name)}" required></label>
+            <label class="field">Biografía<textarea name="bio" maxlength="350" placeholder="Cuéntanos algo sobre ti">${escapeHTML(user.bio || "")}</textarea></label>
+            <button class="btn btn-primary btn-block" type="submit">Guardar cambios</button>
+          </form>
+        </div>
+        <div class="card">
+          <div class="row-between"><span>Favoritos guardados</span><strong>${state.favorites.length}</strong></div>
+          <div class="row-between" style="margin-top: 10px"><span>Artistas en comparador</span><strong>${state.compare.length}</strong></div>
+          <div class="row-between" style="margin-top: 10px"><span>Solicitudes de cita</span><strong>${state.appointments.filter(item => item.createdBy === user.id).length}</strong></div>
+        </div>
+        ${user.demo ? `
+          <div class="card card-accent">
+            <h3>Modo de demostración</h3>
+            <p class="small">Puedes cambiar de rol o reiniciar los datos locales.</p>
+            <button class="btn btn-block" type="button" data-action="switch-role">Cambiar a ${user.role === "tatuador" ? "cliente" : "tatuador"}</button>
+            <button class="btn btn-block" type="button" data-action="reset-demo">Reiniciar demostración</button>
+          </div>
+        ` : ""}
+        <a class="btn btn-block" href="#/credits">Créditos visuales</a>
+        <button class="btn btn-block" type="button" data-action="logout">Cerrar sesión</button>
+      `;
+    };
+
+    views.credits = () => `
+      <a class="small" href="#/profile">← Volver al perfil</a>
+      <h1 style="margin-top: 20px">Créditos visuales.</h1>
+      <p class="muted">Las fotografías se cargan desde Wikimedia Commons. Consulta la fuente original y su licencia antes de redistribuirlas. Los nombres de los artistas dentro de INKORA son ficticios.</p>
+      ${IMAGE_CREDITS.map(image => `
+        <article class="card row-start">
+          <div class="artist-avatar">${displayImage(image.id, image.title)}</div>
+          <div class="grow">
+            <strong>${escapeHTML(image.title)}</strong>
+            <div class="small">Autor: ${escapeHTML(image.creator)}</div>
+            <div class="small">Licencia: ${escapeHTML(image.license)}</div>
+            <div class="row wrap" style="margin-top: 8px">
+              <a class="accent small" href="${escapeHTML(image.sourceUrl)}" target="_blank" rel="noopener noreferrer">Fuente ↗</a>
+              <a class="small" href="${escapeHTML(image.licenseUrl)}" target="_blank" rel="noopener noreferrer">Licencia ↗</a>
+            </div>
+          </div>
+        </article>
+      `).join("")}
+      <div class="legal-note">Atribución preparada para las imágenes incluidas en esta versión. Los servicios externos pueden cambiar sus direcciones o disponibilidad. Revisa siempre la página original de cada recurso.</div>
+    `;
+
+    views.notFound = () => `
+      <h1>Esta página no existe.</h1>
+      <p class="muted">Vuelve al inicio para seguir explorando.</p>
+      <a class="btn btn-primary btn-block" href="#/home">Volver a INKORA</a>
+    `;
+
+    const NAV_ITEMS = [
+      { route: "home", title: "Inicio", icon: "⌂" },
+      { route: "explore", title: "Explorar", icon: "⌖" },
+      { route: "appointments", title: "Citas", icon: "▦" },
+      { route: "messages", title: "Mensajes", icon: "◌" },
+      { route: "profile", title: "Perfil", icon: "☺" }
+    ];
+
+    function parseRoute() {
+      const path = (location.hash || "#/").slice(2).split("/").filter(Boolean);
+      return { page: path[0] || "welcome", id: path.slice(1).join("/") };
+    }
+
+    function routeTo(page) {
+      location.hash = `#/${page}`;
+    }
+
+    function render() {
+      const { page, id } = parseRoute();
+      const publicPages = ["welcome", "auth", "legal", "credits"];
+      const isPublic = publicPages.includes(page);
+
+      if (!isPublic && !state.user) {
+        location.hash = "#/";
+        return;
+      }
+
+      if (page === "welcome" && state.user) {
+        location.hash = "#/home";
+        return;
+      }
+
+      const app = document.getElementById("app");
+      const nav = document.getElementById("mainNav");
+      let content;
+
+      try {
+        if (page === "auth") content = views.auth(id || "login");
+        else if (page === "artist") content = views.artist(id);
+        else if (page === "request") content = views.request(id);
+        else if (page === "appointment") content = views.appointment(decodeURIComponent(id));
+        else if (page === "chat") content = views.chat(id);
+        else if (views[page]) content = views[page]();
+        else content = views.notFound();
+      } catch (error) {
+        console.error("Error al renderizar INKORA:", error);
+        content = views.notFound();
+      }
+
+      app.innerHTML = content;
+      nav.hidden = isPublic;
+      nav.innerHTML = isPublic ? "" : NAV_ITEMS.map(item => {
+        const active = page === item.route || (item.route === "explore" && ["results", "artist", "compare", "favorites"].includes(page));
+        return `<a href="#/${item.route}" class="${active ? "active" : ""}"><span class="nav-icon" aria-hidden="true">${item.icon}</span>${item.title}</a>`;
+      }).join("");
+
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+
+    function setRole(role) {
+      if (!['cliente', 'tatuador'].includes(role)) return;
+      state.selectedRole = role;
+      persist();
+      render();
+    }
+
+    function startGuest(role = state.selectedRole) {
+      state.selectedRole = role;
+      state.user = {
+        id: `demo-${role}`,
+        name: role === "tatuador" ? "Luna Ríos" : "Alex",
+        email: `demo-${role}@inkora.test`,
+        role,
+        bio: "",
+        demo: true
+      };
+      persist();
+      showToast(`Modo de prueba activado: ${role}.`);
+      routeTo("home");
+    }
+
+    function toggleFavorite(id) {
+      const artistId = Number(id);
+      if (state.favorites.includes(artistId)) {
+        state.favorites = state.favorites.filter(item => item !== artistId);
+        showToast("Artista eliminado de favoritos.");
+      } else {
+        state.favorites = [...state.favorites, artistId];
+        showToast("Artista guardado en favoritos.");
+      }
+      persist();
+      render();
+    }
+
+    function toggleCompare(id) {
+      const artistId = Number(id);
+      if (state.compare.includes(artistId)) {
+        state.compare = state.compare.filter(item => item !== artistId);
+      } else {
+        if (state.compare.length >= 3) {
+          showToast("Puedes comparar un máximo de 3 artistas.", true);
+          return;
+        }
+        state.compare = [...state.compare, artistId];
+      }
+      persist();
+      render();
+    }
+
+    function resetFilters() {
+      state.filters = {
+        query: "",
+        style: "",
+        maxPrice: 450,
+        minRating: 0,
+        payment: "",
+        availableOnly: false,
+        verifiedOnly: false,
+        distance: 10,
+        sort: "recommended"
+      };
+      persist();
+      render();
+    }
+
+    function navigateResults() {
+      routeTo("results");
+    }
+
+    function updateAppointmentStatus(reference, status) {
+      const appointment = state.appointments.find(item => item.ref === reference);
+      if (!appointment || !STATUS_LABELS[status]) return;
+      appointment.status = status;
+      persist();
+      showToast(`Estado actualizado: ${STATUS_LABELS[status]}.`);
+      render();
+    }
+
+    function readFileAsDataURL(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result));
+        reader.onerror = () => reject(new Error("No se pudo leer el archivo."));
+        reader.readAsDataURL(file);
+      });
+    }
+
+    document.addEventListener("click", event => {
+      const button = event.target.closest("[data-action]");
+      if (!button) return;
+
+      const { action, id, ref, status } = button.dataset;
+
+      switch (action) {
+        case "select-role":
+          setRole(id);
+          break;
+
+        case "guest":
+          startGuest(state.selectedRole);
+          break;
+
+        case "favorite":
+          toggleFavorite(id);
+          break;
+
+        case "compare-checkbox":
+        case "toggle-compare":
+          toggleCompare(id);
+          break;
+
+        case "reset-filters":
+          resetFilters();
+          break;
+
+        case "view-mode":
+          state.viewMode = id;
+          render();
+          break;
+
+        case "map-pin":
+          state.selectedMapArtist = Number(id);
+          state.viewMode = "map";
+          render();
+          break;
+
+        case "quick-style":
+          state.filters.style = id;
+          state.filters.query = "";
+          persist();
+          routeTo("results");
+          break;
+
+        case "go-results":
+          navigateResults();
+          break;
+
+        case "switch-professional":
+          if (state.user) {
+            state.user.role = "tatuador";
+            state.user.name = state.user.demo ? "Luna Ríos" : state.user.name;
+            state.selectedRole = "tatuador";
+            persist();
+            routeTo("appointments");
+          }
+          break;
+
+        case "switch-role":
+          if (state.user) {
+            state.user.role = state.user.role === "tatuador" ? "cliente" : "tatuador";
+            state.selectedRole = state.user.role;
+            state.user.name = state.user.demo ? (state.user.role === "tatuador" ? "Luna Ríos" : "Alex") : state.user.name;
+            persist();
+            render();
+            showToast(`Rol cambiado a ${state.user.role}.`);
+          }
+          break;
+
+        case "logout":
+          state.user = null;
+          persist();
+          routeTo("");
+          break;
+
+        case "appointment-status":
+          updateAppointmentStatus(ref, status);
+          break;
+
+        case "save-availability": {
+          const dayInputs = [...document.querySelectorAll("[data-availability-day]")];
+          const slotInputs = [...document.querySelectorAll("[data-availability-slot]")];
+          state.availability.days = dayInputs.filter(input => input.checked).map(input => Number(input.dataset.availabilityDay));
+          state.availability.slots = slotInputs.filter(input => input.checked).map(input => input.dataset.availabilitySlot).sort();
+          state.availability.duration = Number(document.querySelector("[data-availability-duration]")?.value || 2);
+          persist();
+          showToast("Disponibilidad de demostración guardada.");
+          render();
+          break;
+        }
+
+        case "delete-piece":
+          state.portfolio = state.portfolio.filter(piece => String(piece.id) !== String(id));
+          persist();
+          showToast("Pieza eliminada del portafolio.");
+          render();
+          break;
+
+        case "reset-demo": {
+          const confirmed = window.confirm("¿Reiniciar la demostración y borrar los datos locales de INKORA en este navegador?");
+          if (!confirmed) return;
+          for (const key of Object.keys(localStorage)) {
+            if (key.startsWith(STORAGE_PREFIX)) localStorage.removeItem(key);
+          }
+          window.location.hash = "#/";
+          window.location.reload();
+          break;
+        }
+      }
+    });
+
+    document.addEventListener("change", event => {
+      const element = event.target;
+
+      if (element.matches("[data-filter]")) {
+        const filter = element.dataset.filter;
+        if (element.type === "checkbox") {
+          state.filters[filter] = element.checked;
+        } else if (element.type === "range") {
+          state.filters[filter] = Number(element.value);
+        } else {
+          state.filters[filter] = element.value;
+        }
+        persist();
+        render();
+      }
+    });
+
+    document.addEventListener("submit", async event => {
+      const form = event.target;
+      event.preventDefault();
+      const formData = new FormData(form);
+      const values = Object.fromEntries(formData.entries());
+
+      if (form.id === "authForm") {
+        const errorElement = document.getElementById("authError");
+        const mode = form.dataset.mode;
+        const name = String(values.name || "").trim();
+        const email = String(values.email || "").trim();
+        const password = String(values.password || "");
+
+        errorElement.textContent = "";
+        if (mode === "register" && !name) {
+          errorElement.textContent = "Escribe tu nombre.";
+          return;
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          errorElement.textContent = "Introduce un correo válido.";
+          return;
+        }
+        if (password.length < 6) {
+          errorElement.textContent = "La contraseña debe tener al menos 6 caracteres.";
+          return;
+        }
+
+        state.user = {
+          id: `local-${Date.now()}`,
+          name: name || email.split("@")[0],
+          email,
+          role: state.selectedRole,
+          bio: "",
+          demo: true
+        };
+        persist();
+        showToast("Sesión de demostración iniciada.");
+        routeTo("home");
+      }
+
+      if (form.id === "homeSearch" || form.id === "resultsSearch") {
+        state.filters.query = String(values.query || "").trim();
+        persist();
+        routeTo("results");
+      }
+
+      if (form.id === "requestForm") {
+        const errorElement = document.getElementById("requestError");
+        errorElement.textContent = "";
+        const artistId = Number(form.dataset.artistId);
+
+        if (!String(values.idea || "").trim()) {
+          errorElement.textContent = "Describe tu idea antes de enviar la solicitud.";
+          return;
+        }
+        if (!String(values.zone || "").trim()) {
+          errorElement.textContent = "Indica la zona del cuerpo.";
+          return;
+        }
+        if (!values.date) {
+          errorElement.textContent = "Selecciona una fecha preferida.";
+          return;
+        }
+        const requestedDate = new Date(`${values.date}T12:00:00`);
+        if (Number.isNaN(requestedDate.getTime()) || requestedDate < new Date(new Date().toDateString())) {
+          errorElement.textContent = "Selecciona una fecha válida que no haya pasado.";
+          return;
+        }
+
+        const reference = `IK-${String(Date.now()).slice(-7)}`;
+        state.appointments.unshift({
+          ref: reference,
+          artistId,
+          createdBy: state.user?.id || "demo-client",
+          date: values.date,
+          time: values.time || "16:00",
+          idea: String(values.idea).trim(),
+          style: values.style || "",
+          zone: String(values.zone).trim(),
+          size: String(values.size || "").trim(),
+          budget: String(values.budget || "").trim(),
+          status: "pending",
+          createdAt: Date.now()
+        });
+        persist();
+        showToast("Solicitud de demostración creada.");
+        routeTo(`appointment/${encodeURIComponent(reference)}`);
+      }
+
+      if (form.id === "chatForm") {
+        const artistId = Number(form.dataset.artistId);
+        const text = String(values.text || "").trim();
+        if (!text) return;
+        state.messages[artistId] = state.messages[artistId] || [];
+        state.messages[artistId].push({ text, mine: true, timestamp: Date.now() });
+        persist();
+        render();
+      }
+
+      if (form.classList.contains("comment-form")) {
+        const post = state.posts.find(item => String(item.id) === form.dataset.postId);
+        const comment = String(values.comment || "").trim();
+        if (!post || !comment) return;
+        post.comments.push(comment);
+        persist();
+        render();
+        showToast("Respuesta añadida al tema local.");
+      }
+
+      if (form.id === "newPostForm") {
+        const title = String(values.title || "").trim();
+        if (!title) return;
+        state.posts.unshift({
+          id: Date.now(),
+          room: String(values.room || "General"),
+          title,
+          author: state.user?.name || "Usuario de prueba",
+          comments: []
+        });
+        persist();
+        showToast("Tema creado en la comunidad de demostración.");
+        render();
+      }
+
+      if (form.id === "profileForm") {
+        const name = String(values.name || "").trim();
+        if (!name) {
+          showToast("El nombre no puede estar vacío.", true);
+          return;
+        }
+        state.user.name = name;
+        state.user.bio = String(values.bio || "").trim();
+        persist();
+        showToast("Perfil actualizado.");
+        render();
+      }
+
+      if (form.id === "portfolioForm") {
+        const errorElement = document.getElementById("portfolioError");
+        const title = String(values.title || "").trim();
+        const file = form.querySelector('input[name="image"]').files[0];
+        errorElement.textContent = "";
+        if (!title) {
+          errorElement.textContent = "Escribe un título para la pieza.";
+          return;
+        }
+        if (file && !["image/jpeg", "image/png"].includes(file.type)) {
+          errorElement.textContent = "El archivo debe ser JPG o PNG.";
+          return;
+        }
+        if (file && file.size > MAX_IMAGE_BYTES) {
+          errorElement.textContent = "La imagen supera el límite de 1 MB.";
+          return;
+        }
+
+        let image = "";
+        try {
+          if (file) image = await readFileAsDataURL(file);
+        } catch (error) {
+          errorElement.textContent = "No se pudo leer la imagen.";
+          return;
+        }
+
+        state.portfolio.unshift({
+          id: Date.now(),
+          title,
+          description: String(values.description || "").trim(),
+          style: String(values.style || STYLE_LIST[0]),
+          image
+        });
+        persist();
+        showToast("Pieza añadida al portafolio local.");
+        render();
+      }
+    });
+
+    document.addEventListener("input", event => {
+      if (event.target.id === "communitySearch") {
+        const position = event.target.selectionStart;
+        state.communityQuery = event.target.value;
+        render();
+        const replacement = document.getElementById("communitySearch");
+        if (replacement) {
+          replacement.focus();
+          replacement.setSelectionRange(position, position);
+        }
+      }
+    });
+
+    window.addEventListener("hashchange", render);
+
+    // Inicia en la pantalla pública si no hay una sesión local.
+    if (!location.hash) location.hash = state.user ? "#/home" : "#/";
+    render();
+  </script>
+</body>
+</html>
